@@ -24,17 +24,22 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     try {
-        
+        const servicesCollection = client.db('studyWithTamim').collection('services');
+
+        // services api
+        app.get('/services', async (req, res) => {
+            const query = {}
+            const cursor = servicesCollection.find(query)
+            const services = await cursor.toArray()
+            res.send(services)
+        })
+
     }
     finally {
         
     }
 }
-
-// services api
-app.get('/services', (req, res) => {
-
-})
+run().catch(err => console.error(err))
 
 app.listen(port, () => {
     console.log(`server is running on port ${port}`);
