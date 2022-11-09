@@ -67,7 +67,8 @@ async function run() {
 
         // reviews api get
         app.get('/reviews', async (req, res) => {
-            const query = {}
+            const id = req.query.id
+            const query = {courseId: id}
             const reviews = await reviewsCollection.find(query).sort({_id: -1}).toArray()
             res.send(reviews)
         })
