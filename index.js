@@ -31,7 +31,9 @@ async function run() {
         // services api
         app.get('/services', async (req, res) => {
             const limit = parseInt(req.query.limit)
+    
             const query = {}
+            
             const cursor = servicesCollection.find(query)
             let services;
             if (limit) {
@@ -68,9 +70,28 @@ async function run() {
         // reviews api get
         app.get('/reviews', async (req, res) => {
             const id = req.query.id
-            const query = {courseId: id}
+            const email = req.query.email
+
+            let query;
+
+            if (id && email) {
+                query = {courseId: id, email: email}
+            } else if(id && !email) {
+                query = {courseId: id}
+            } else if (!id && email) {
+                query = {email: email}
+            }
+
             const reviews = await reviewsCollection.find(query).sort({_id: -1}).toArray()
             res.send(reviews)
+        })
+
+        // delete a review
+        app.delete('/reviews/:id', async function (req, res) {
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const result = await reviewsCollection.deleteOne(query)
+            res.send(result)
         })
 
 
