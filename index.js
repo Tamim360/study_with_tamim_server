@@ -33,9 +33,9 @@ async function run() {
             const cursor = servicesCollection.find(query)
             let services;
             if (limit) {
-                services = await cursor.limit(limit).toArray()
+                services = await (await cursor.sort({_id: -1}).limit(limit).toArray())
             } else {
-                services = await cursor.toArray()
+                services = await cursor.sort({_id: -1}).toArray()
             }
             res.send(services)
         })
